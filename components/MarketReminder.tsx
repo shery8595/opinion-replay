@@ -193,8 +193,8 @@ export const MarketReminder: React.FC = () => {
         <div className="min-h-screen bg-[#0A0A0F] font-sans">
             {/* Main Container - Full Width */}
             <div className="w-full px-4 py-3">
-                {/* 3-Column Layout - Optimized Widths */}
-                <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_220px] gap-4">
+                {/* Ultra-Compact Layout - Aggressive Scaling */}
+                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_190px] gap-3">
 
                     {/* LEFT SIDEBAR - Market Library */}
                     <motion.div
@@ -230,14 +230,14 @@ export const MarketReminder: React.FC = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.03 }}
                                         onClick={() => setSelectedMarket(market.marketId)}
-                                        className={`relative p-3 rounded-xl cursor-pointer transition-all duration-300 ${selectedMarket === market.marketId
-                                            ? 'bg-[rgba(255,140,66,0.08)] border border-[rgba(255,140,66,0.3)] shadow-[-3px_0_0_0_#FF8C42]'
-                                            : 'bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/[0.12] hover:translate-x-1 hover:shadow-[-3px_0_0_0_#FF8C42]'
+                                        className={`relative p-2.5 rounded-xl cursor-pointer transition-all duration-300 ${selectedMarket === market.marketId
+                                            ? 'bg-[rgba(255,140,66,0.08)] border border-[rgba(255,140,66,0.3)] shadow-[-2px_0_0_0_#FF8C42]'
+                                            : 'bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/[0.12] hover:translate-x-1 hover:shadow-[-2px_0_0_0_#FF8C42]'
                                             }`}
                                     >
-                                        <div className="flex gap-2.5 items-start mb-2.5">
+                                        <div className="flex gap-2 items-start mb-2">
                                             {/* Market Image */}
-                                            <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
+                                            <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
                                                 <img
                                                     src={getMarketImage(market.marketId.toString())}
                                                     alt={market.marketTitle}
@@ -248,11 +248,11 @@ export const MarketReminder: React.FC = () => {
                                             <div className="flex flex-col flex-1 min-w-0">
                                                 {/* Market ID */}
                                                 <div className="flex items-center gap-2 mb-0.5">
-                                                    <span className="text-[9px] font-mono font-medium text-[#666666]">#{market.marketId}</span>
+                                                    <span className="text-[8px] font-mono font-medium text-[#666666]">#{market.marketId}</span>
                                                 </div>
 
                                                 {/* Title */}
-                                                <h4 className="text-[12px] font-medium text-white leading-tight mb-1 line-clamp-2">
+                                                <h4 className="text-[11px] font-medium text-white leading-tight mb-1 line-clamp-2">
                                                     {market.marketTitle}
                                                 </h4>
                                             </div>
@@ -276,7 +276,7 @@ export const MarketReminder: React.FC = () => {
                                                 e.stopPropagation();
                                                 setShowModal(market);
                                             }}
-                                            className="absolute top-3 right-3 w-10 h-6 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.4)] rounded text-[#10B981] text-[10px] font-bold hover:bg-[rgba(16,185,129,0.25)] transition-all"
+                                            className="absolute top-2.5 right-2.5 w-9 h-5.5 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.4)] rounded text-[#10B981] text-[9px] font-bold hover:bg-[rgba(16,185,129,0.25)] transition-all"
                                         >
                                             YES
                                         </button>

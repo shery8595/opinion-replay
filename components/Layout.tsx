@@ -1,22 +1,35 @@
-import { HelpCircle, Activity, Wifi, WifiOff } from 'lucide-react';
+import { HelpCircle, Activity, Wifi, WifiOff, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { isAPIKeyConfigured } from '../services/opinionApiClient';
 
-export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface LayoutProps {
+  children: React.ReactNode;
+  onMobileMenuClick?: () => void;
+}
+
+export const Layout: React.FC<LayoutProps> = ({ children, onMobileMenuClick }) => {
   const [logoError, setLogoError] = useState(false);
 
 
   return (
-    <div className="flex flex-col h-screen bg-[#060608] text-[#F8F8F8] overflow-hidden font-sans">
+    <div className="flex flex-col h-screen bg-[#060608] text-[#F8F8F8] overflow-hidden font-sans supports-[height:100cqh]:h-[100cqh]">
       {/* Top Navigation - Floating Glass Header */}
-      <div className="px-6 pt-4 pb-0 relative z-50">
-        <header className="glass-surface-elevated flex items-center justify-between h-14 px-5 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
+      <div className="px-4 md:px-6 pt-2 md:pt-4 pb-0 relative z-50 shrink-0">
+        <header className="glass-surface-elevated flex items-center justify-between h-14 px-4 md:px-5 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
           {/* Sub-surface glow effect */}
           <div className="absolute top-0 right-0 w-64 h-full bg-gradient-to-l from-orange-500/5 to-transparent pointer-events-none" />
 
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-4 md:gap-10">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={onMobileMenuClick}
+              className="md:hidden p-2 -ml-2 text-zinc-400 hover:text-white transition-colors"
+            >
+              <Menu size={20} />
+            </button>
+
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FF6100] flex items-center justify-center rounded-lg shadow-[0_0_20px_rgba(255,97,0,0.4)] relative overflow-hidden">
+              <div className="w-8 h-8 bg-[#FF6100] flex items-center justify-center rounded-lg shadow-[0_0_20px_rgba(255,97,0,0.4)] relative overflow-hidden shrink-0">
                 {!logoError ? (
                   <img
                     src="/logo/logo.jpg"
@@ -47,8 +60,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </div>
 
           {/* Right Section: System Status */}
-          <div className="flex items-center gap-5">
-            <div className={`flex items-center gap-3 px-3 py-1.5 bg-black/40 border rounded-lg transition-colors ${isAPIKeyConfigured() ? 'border-[#00FF9C]/20' : 'border-[#FF3E5E]/20'}`}>
+          <div className="flex items-center gap-3 md:gap-5">
+            <div className={`hidden md:flex items-center gap-3 px-3 py-1.5 bg-black/40 border rounded-lg transition-colors ${isAPIKeyConfigured() ? 'border-[#00FF9C]/20' : 'border-[#FF3E5E]/20'}`}>
               <div className="flex items-center gap-1.5 border-r border-white/10 pr-3">
                 {isAPIKeyConfigured() ? (
                   <Wifi size={12} className="text-[#00FF9C]" />
@@ -67,8 +80,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 border-l border-white/10 pl-5">
-              <button className="p-1.5 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all text-zinc-400 hover:text-white">
+            <div className="flex items-center gap-2 border-l border-white/10 pl-3 md:pl-5">
+              <button className="hidden md:block p-1.5 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-all text-zinc-400 hover:text-white">
                 <HelpCircle size={16} />
               </button>
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center text-[10px] font-black font-mono shadow-xl text-zinc-400">
@@ -80,8 +93,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </div>
 
       {/* Main Container - Space reserved for header padding */}
-      <main className="flex-1 flex overflow-hidden mt-2 px-6 pb-6">
-        <div className="w-full h-full glass-surface rounded-2xl border border-white/5 overflow-hidden flex">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden mt-2 px-2 md:px-6 pb-2 md:pb-6 relative">
+        <div className="w-full h-full glass-surface rounded-xl md:rounded-2xl border border-white/5 overflow-hidden flex flex-col md:flex-row relative">
           {children}
         </div>
       </main>

@@ -19,7 +19,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <div className="w-8 h-8 bg-[#FF6100] flex items-center justify-center rounded-lg shadow-[0_0_20px_rgba(255,97,0,0.4)] relative overflow-hidden">
                 {!logoError ? (
                   <img
-                    src="/logo/logo.png"
+                    src="/logo/logo.jpg"
                     alt="Logo"
                     className="w-full h-full object-cover"
                     onError={() => setLogoError(true)}

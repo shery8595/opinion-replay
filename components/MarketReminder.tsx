@@ -193,8 +193,8 @@ export const MarketReminder: React.FC = () => {
         <div className="min-h-screen bg-[#0A0A0F] font-sans">
             {/* Main Container - Full Width */}
             <div className="w-full px-4 py-3">
-                {/* Ultra-Compact Layout - Aggressive Scaling */}
-                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_190px] gap-3">
+                {/* Premium Compact Layout - Re-balanced for Aesthetics */}
+                <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr_210px] gap-4">
 
                     {/* LEFT SIDEBAR - Market Library */}
                     <motion.div
@@ -296,10 +296,10 @@ export const MarketReminder: React.FC = () => {
                         {/* Header */}
                         <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/[0.06]">
                             <div className="flex items-center gap-2">
-                                <div className="w-7 h-7 bg-gradient-to-br from-[#FF8C42] to-[#FF7B2F] rounded-lg flex items-center justify-center">
-                                    <Search size={14} className="text-white" />
+                                <div className="w-8 h-8 bg-gradient-to-br from-[#FF6100] to-[#FF8C42] rounded-lg flex items-center justify-center shadow-[0_4px_12px_rgba(255,97,0,0.3)]">
+                                    <Search size={16} className="text-white" />
                                 </div>
-                                <h2 className="text-xl font-bold text-white tracking-tight">Market Browser</h2>
+                                <h2 className="text-lg font-bold text-white tracking-tight">Market Browser</h2>
                             </div>
 
                             <div className="relative">
@@ -327,19 +327,19 @@ export const MarketReminder: React.FC = () => {
 
                                     {/* Header Row */}
                                     <div className="flex items-center justify-between mb-4 relative z-10">
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-[11px] font-mono font-semibold text-[#666666] px-3 py-1 bg-white/5 border border-white/[0.08] rounded-md">
-                                                #{market.marketId}
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-[10px] font-mono font-bold text-[#FF6100] px-2 py-0.5 bg-[#FF6100]/5 border border-[#FF6100]/20 rounded uppercase tracking-tighter">
+                                                ID: {market.marketId}
                                             </span>
-                                            <div className="flex items-center gap-2 text-xs text-[#FFB84D] font-semibold">
-                                                <BarChart2 size={12} />
+                                            <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
+                                                <BarChart2 size={12} className="text-[#FFB84D]" />
                                                 {formatVolume(market.volume24h || '0')}
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse" />
-                                            <span className="px-3 py-1 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.3)] rounded-md text-[#10B981] text-[10px] font-bold uppercase tracking-wide">
+                                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                                            <span className="text-emerald-500 text-[9px] font-black uppercase tracking-widest">
                                                 Live
                                             </span>
                                         </div>
@@ -362,30 +362,30 @@ export const MarketReminder: React.FC = () => {
                                     </div>
 
                                     {/* Stats Grid */}
-                                    <div className="grid grid-cols-2 gap-4 mb-6 p-5 bg-white/[0.03] border border-white/[0.06] rounded-xl relative z-10">
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-[11px] text-[#888888] uppercase tracking-wide font-medium">YES Tokens</span>
-                                            <span className="text-base text-[#10B981] font-semibold font-mono">{Math.floor(Math.random() * 50000 + 10000)}</span>
+                                    <div className="grid grid-cols-2 gap-3 mb-5 relative z-10">
+                                        <div className="flex flex-col gap-1 p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl">
+                                            <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Tokens</span>
+                                            <span className="text-sm text-emerald-400 font-bold font-mono tracking-tight">{Math.floor(Math.random() * 50000 + 10000).toLocaleString()}</span>
                                         </div>
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-[11px] text-[#888888] uppercase tracking-wide font-medium">Expiry</span>
-                                            <div className="flex items-center gap-2 text-base text-[#FFB84D] font-semibold">
-                                                <Clock size={14} />
+                                        <div className="flex flex-col gap-1 p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl">
+                                            <span className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Expiry</span>
+                                            <div className="flex items-center gap-2 text-sm text-[#FFB84D] font-bold">
+                                                <Clock size={13} />
                                                 {Math.floor(Math.random() * 30 + 1)}d
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="flex gap-3 relative z-10">
+                                    <div className="flex gap-2 relative z-10">
                                         <button
                                             onClick={() => setShowModal(market)}
-                                            className="flex-1 h-12 bg-gradient-to-r from-[rgba(255,140,66,0.2)] to-[rgba(255,123,47,0.2)] border-[1.5px] border-[rgba(255,140,66,0.5)] rounded-xl text-[#FF8C42] text-sm font-semibold uppercase tracking-wide hover:from-[rgba(255,140,66,0.3)] hover:to-[rgba(255,123,47,0.3)] hover:border-[rgba(255,140,66,0.8)] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,140,66,0.25)] transition-all"
+                                            className="flex-1 h-11 bg-gradient-to-r from-[#FF6100] to-[#FF8C42] rounded-xl text-white text-[11px] font-black uppercase tracking-widest shadow-[0_4px_15px_rgba(255,97,0,0.2)] hover:shadow-[0_6px_20px_rgba(255,97,0,0.4)] hover:-translate-y-0.5 transition-all active:scale-95"
                                         >
                                             Deploy Alert
                                         </button>
-                                        <button className="w-12 h-12 bg-white/5 border-[1.5px] border-white/10 rounded-xl text-white flex items-center justify-center hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-0.5 transition-all">
-                                            <Info size={20} />
+                                        <button className="w-11 h-11 bg-white/5 border border-white/10 rounded-xl text-zinc-400 flex items-center justify-center hover:bg-white/[0.08] hover:text-white transition-all">
+                                            <Info size={18} />
                                         </button>
                                     </div>
                                 </motion.div>
@@ -403,15 +403,16 @@ export const MarketReminder: React.FC = () => {
                         {/* System Health */}
                         <div className="bg-[rgba(20,20,25,0.6)] border border-white/[0.08] rounded-xl p-4 backdrop-blur-lg">
                             <div className="flex items-center justify-between mb-4">
-                                <span className="text-[11px] font-semibold text-[#888888] uppercase tracking-wide">System Health</span>
-                                <div className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_0_3px_rgba(16,185,129,0.2),0_0_12px_rgba(16,185,129,0.6)] animate-pulse" />
+                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">System Health</span>
+                                <div className="flex gap-1">
+                                    <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                                    <div className="w-1 h-1 rounded-full bg-emerald-500/40" />
+                                </div>
                             </div>
 
-                            <div className="p-2.5 bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] rounded-lg flex items-center justify-between">
-                                <span className="text-sm font-bold text-[#10B981] uppercase tracking-wide">Granted</span>
-                                <div className="w-8 h-8 bg-[rgba(16,185,129,0.2)] border-2 border-[rgba(16,185,129,0.4)] rounded-lg flex items-center justify-center">
-                                    <CheckCircle2 size={16} className="text-[#10B981]" />
-                                </div>
+                            <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl flex items-center justify-between group">
+                                <span className="text-xs font-black text-emerald-500 uppercase tracking-widest">Connection Stable</span>
+                                <CheckCircle2 size={16} className="text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
                             </div>
                         </div>
 
@@ -427,19 +428,21 @@ export const MarketReminder: React.FC = () => {
                             {activeAlerts.length > 0 ? (
                                 <div className="space-y-3">
                                     {activeAlerts.slice(0, 3).map(alert => (
-                                        <div key={alert.id} className="p-3 bg-[rgba(255,140,66,0.08)] border border-[rgba(255,140,66,0.2)] rounded-xl">
+                                        <div key={alert.id} className="p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-[#FF6100]/30 transition-colors">
                                             <div className="flex items-start justify-between gap-2 mb-2">
-                                                <span className="text-xs text-white font-medium line-clamp-1">{alert.marketTitle}</span>
+                                                <span className="text-[11px] text-zinc-200 font-bold leading-tight line-clamp-1">{alert.marketTitle}</span>
                                                 <button
                                                     onClick={() => deleteAlert(alert.id)}
-                                                    className="text-[#FF8C42] hover:text-[#FFB84D] transition-colors"
+                                                    className="text-zinc-500 hover:text-[#FF3E5E] transition-colors"
                                                 >
-                                                    <X size={14} />
+                                                    <X size={12} />
                                                 </button>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Target size={12} className="text-[#FF8C42]" />
-                                                <span className="text-[10px] text-[#888888] uppercase font-medium">{alert.type} alert</span>
+                                                <div className="px-1.5 py-0.5 bg-[#FF6100]/10 border border-[#FF6100]/20 rounded text-[8px] text-[#FF6100] font-black uppercase tracking-tighter">
+                                                    {alert.type}
+                                                </div>
+                                                <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter">Active Agent</span>
                                             </div>
                                         </div>
                                     ))}
@@ -460,17 +463,16 @@ export const MarketReminder: React.FC = () => {
                         {/* Persistence Engine */}
                         <div className="bg-[rgba(20,20,25,0.6)] border border-white/[0.08] rounded-xl p-4 backdrop-blur-lg">
                             <div className="flex items-center justify-between mb-4">
-                                <span className="text-[11px] font-semibold text-[#888888] uppercase tracking-wide">Persistence Engine</span>
+                                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Persistence Engine</span>
+                                <ShieldCheck size={14} className="text-[#4D94FF] animate-pulse" />
                             </div>
 
-                            <div className="p-4 bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg flex items-center gap-3">
-                                <div className="w-10 h-10 bg-[rgba(59,130,246,0.15)] rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <ShieldCheck size={20} className="text-[#3B82F6]" />
+                            <div className="p-3 bg-[#4D94FF]/5 border border-[#4D94FF]/20 rounded-xl">
+                                <div className="flex items-center gap-3 mb-1">
+                                    <div className="w-2 h-2 rounded-full bg-[#4D94FF] shadow-[0_0_8px_rgba(77,148,255,0.8)]" />
+                                    <span className="text-[11px] font-black text-[#4D94FF] uppercase tracking-widest">Protected</span>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-bold text-[#3B82F6] uppercase tracking-wide mb-0.5">Protected</div>
-                                    <div className="text-[11px] text-[#888888] font-medium">LocalStorage Active</div>
-                                </div>
+                                <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter ml-5">Active Session Sync</span>
                             </div>
                         </div>
                     </motion.div>

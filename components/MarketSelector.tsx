@@ -14,7 +14,7 @@ interface Props {
 
 export const MarketSelector: React.FC<Props> = ({ markets, selectedMarket, isLoading, onSelect }) => {
   return (
-    <div className="w-60 border-r border-white/5 bg-black/20 p-3.5 flex flex-col gap-6 shrink-0 relative z-10 font-sans">
+    <div className="w-full border-r border-white/5 bg-black/20 p-3.5 flex flex-col gap-6 shrink-0 relative z-10 font-sans h-full">
       <div className="space-y-6">
         {/* Precision Search */}
         <div className="relative group">
@@ -36,7 +36,7 @@ export const MarketSelector: React.FC<Props> = ({ markets, selectedMarket, isLoa
           )}
         </div>
 
-        <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-220px)] pr-2 custom-scrollbar">
+        <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar min-h-0">
           {isLoading ? (
             // Loading Skeletons
             Array.from({ length: 5 }).map((_, i) => (

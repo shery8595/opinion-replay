@@ -178,9 +178,9 @@ export const MarketAnalytics: React.FC = () => {
                         </button>
                     </div>
                 ) : isLoading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 gap-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div key={i} className="bg-[#1A1A1F] rounded-2xl p-7 border border-white/[0.06] min-h-[420px] animate-pulse"></div>
+                            <div key={i} className="bg-[#1A1A1F] rounded-2xl p-8 border border-white/[0.06] min-h-[500px] animate-pulse"></div>
                         ))}
                     </div>
                 ) : (
@@ -191,8 +191,7 @@ export const MarketAnalytics: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.3 }}
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 gap-y-6"
-                            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                         >
                             {getActiveMarkets().slice(0, 12).map((market, index) => {
                                 const yesPrice = (market.currentPrice || 0.5) * 100;
@@ -205,15 +204,15 @@ export const MarketAnalytics: React.FC = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05, duration: 0.4 }}
                                         onClick={() => openMarketPage(market.marketId)}
-                                        className="bg-[rgba(20,20,25,0.7)] rounded-2xl p-6 border border-white/[0.06] flex flex-col cursor-pointer hover:-translate-y-1 hover:border-[#FF6100]/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-400 group relative overflow-hidden"
+                                        className="bg-[rgba(20,20,25,0.7)] rounded-2xl p-8 border border-white/[0.06] flex flex-col cursor-pointer hover:-translate-y-1 hover:border-[#FF6100]/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-400 group relative overflow-hidden min-h-[500px]"
                                     >
                                         {/* Premium Subtle Pattern */}
                                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#FF6100]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#FF6100]/5 blur-2xl rounded-full" />
 
                                         {/* Card Header */}
-                                        <div className="flex gap-4 mb-5 relative z-10">
-                                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex-shrink-0">
+                                        <div className="flex gap-5 mb-6 relative z-10">
+                                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex-shrink-0">
                                                 <img
                                                     src={getMarketImage(market.marketId.toString())}
                                                     alt={market.marketTitle}
@@ -222,49 +221,49 @@ export const MarketAnalytics: React.FC = () => {
                                             </div>
 
                                             <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[9px] font-black text-[#FF6100] px-1.5 py-0.5 bg-[#FF6100]/10 border border-[#FF6100]/20 rounded uppercase tracking-tighter">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <span className="text-[10px] font-black text-[#FF6100] px-2 py-1 bg-[#FF6100]/10 border border-[#FF6100]/20 rounded uppercase tracking-tighter">
                                                         #{market.marketId}
                                                     </span>
-                                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Active Market</span>
+                                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Active Market</span>
                                                 </div>
-                                                <h3 className="text-[15px] font-bold text-white leading-tight line-clamp-2 italic">
+                                                <h3 className="text-[17px] font-bold text-white leading-tight line-clamp-2 italic">
                                                     {market.marketTitle}
                                                 </h3>
                                             </div>
                                         </div>
 
                                         {/* Outcomes Section - Institutional Design */}
-                                        <div className="space-y-3 mb-5 relative z-10">
+                                        <div className="space-y-4 mb-6 relative z-10">
                                             {/* YES Bar */}
-                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-10 flex items-center justify-between px-4 transition-all hover:border-emerald-500/30">
+                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-12 flex items-center justify-between px-5 transition-all hover:border-emerald-500/30">
                                                 <div
                                                     className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-emerald-500/10 to-transparent transition-all duration-1000"
                                                     style={{ width: `${yesPrice}%` }}
                                                 />
-                                                <div className="flex items-center gap-2 relative z-10">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                                                    <span className="text-[10px] font-black text-white tracking-[0.2em]">YES</span>
+                                                <div className="flex items-center gap-3 relative z-10">
+                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                                                    <span className="text-[11px] font-black text-white tracking-[0.2em]">YES</span>
                                                 </div>
                                                 <div className="flex items-center gap-3 relative z-10">
-                                                    <span className="text-xs font-bold text-emerald-400 font-mono italic">{yesPrice.toFixed(1)}%</span>
+                                                    <span className="text-sm font-bold text-emerald-400 font-mono italic">{yesPrice.toFixed(1)}%</span>
                                                     <div className="h-6 w-px bg-white/10" />
                                                     <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Bid</span>
                                                 </div>
                                             </div>
 
                                             {/* NO Bar */}
-                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-10 flex items-center justify-between px-4 transition-all hover:border-rose-500/30">
+                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-12 flex items-center justify-between px-5 transition-all hover:border-rose-500/30">
                                                 <div
                                                     className="absolute inset-0 bg-gradient-to-r from-rose-500/20 via-rose-500/10 to-transparent transition-all duration-1000"
                                                     style={{ width: `${noPrice}%` }}
                                                 />
-                                                <div className="flex items-center gap-2 relative z-10">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-                                                    <span className="text-[10px] font-black text-white tracking-[0.2em]">NO</span>
+                                                <div className="flex items-center gap-3 relative z-10">
+                                                    <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                                                    <span className="text-[11px] font-black text-white tracking-[0.2em]">NO</span>
                                                 </div>
                                                 <div className="flex items-center gap-3 relative z-10">
-                                                    <span className="text-xs font-bold text-rose-400 font-mono italic">{noPrice.toFixed(1)}%</span>
+                                                    <span className="text-sm font-bold text-rose-400 font-mono italic">{noPrice.toFixed(1)}%</span>
                                                     <div className="h-6 w-px bg-white/10" />
                                                     <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Ask</span>
                                                 </div>
@@ -272,25 +271,25 @@ export const MarketAnalytics: React.FC = () => {
                                         </div>
 
                                         {/* Metrics Grid */}
-                                        <div className="grid grid-cols-2 gap-2 mb-5 relative z-10">
-                                            <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
-                                                <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">VOL_24H</span>
-                                                <span className="text-xs font-bold text-zinc-200">{formatVolume(market.volume24h || '0')}</span>
+                                        <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+                                            <div className="p-4 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
+                                                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">VOL_24H</span>
+                                                <span className="text-sm font-bold text-zinc-200">{formatVolume(market.volume24h || '0')}</span>
                                             </div>
-                                            <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
-                                                <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">CL_SOON</span>
-                                                <div className="flex items-center gap-1.5">
-                                                    <Zap size={10} className="text-[#FFB84D]" />
-                                                    <span className="text-xs font-bold text-[#FFB84D]">{formatDate(market.createdAt)}</span>
+                                            <div className="p-4 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
+                                                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">CL_SOON</span>
+                                                <div className="flex items-center gap-2">
+                                                    <Zap size={12} className="text-[#FFB84D]" />
+                                                    <span className="text-sm font-bold text-[#FFB84D]">{formatDate(market.createdAt)}</span>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Card Footer */}
-                                        <div className="flex items-center justify-between pt-4 border-t border-white/[0.05] mt-auto relative z-10">
-                                            <div className="flex items-center gap-2 px-3 py-1 bg-[#FF6100]/5 border border-[#FF6100]/20 rounded-lg group-hover:bg-[#FF6100]/10 transition-colors">
-                                                <span className="text-[9px] font-black text-[#FF6100] uppercase tracking-widest">Open Analytics</span>
-                                                <ExternalLink size={10} className="text-[#FF6100]" />
+                                        <div className="flex items-center justify-between pt-5 border-t border-white/[0.05] mt-auto relative z-10">
+                                            <div className="flex items-center gap-2 px-4 py-2 bg-[#FF6100]/5 border border-[#FF6100]/20 rounded-lg group-hover:bg-[#FF6100]/10 transition-colors">
+                                                <span className="text-[10px] font-black text-[#FF6100] uppercase tracking-widest">Open Analytics</span>
+                                                <ExternalLink size={12} className="text-[#FF6100]" />
                                             </div>
                                             <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">
                                                 Institutional Feed

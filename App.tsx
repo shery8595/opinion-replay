@@ -25,6 +25,9 @@ const App: React.FC = () => {
   const [selectedMarket, setSelectedMarket] = useState<Market>(MOCK_MARKETS[0]);
   const [activeTab, setActiveTab] = useState<'BACKTEST' | 'REMINDER' | 'XRAY' | 'SIMULATOR'>('BACKTEST');
 
+  // Mobile State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Load markets based on data source
   useEffect(() => {
     loadMarkets();
@@ -86,7 +89,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout onMobileMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
       <AnimatePresence>
         {loadError && (
           <div className="bg-black/40 border-b border-white/5 px-6 py-3 flex items-center justify-between pointer-events-none">
@@ -102,51 +105,89 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {!['XRAY', 'REMINDER'].includes(activeTab) && (
-        <MarketSelector
-          markets={markets}
-          selectedMarket={selectedMarket}
-          isLoading={isLoadingMarkets}
-          onSelect={(m) => {
-            setSelectedMarket(m);
-          }}
-        />
-      )}
+      {/* Mobile Navigation Drawer Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute top-0 bottom-0 left-0 w-[280px] z-50 md:hidden bg-[#0A0A0F] border-r border-white/10 shadow-2xl overflow-y-auto"
+            >
+              <MarketSelector
+                markets={markets}
+                selectedMarket={selectedMarket}
+                isLoading={isLoadingMarkets}
+                onSelect={(m) => {
+                  setSelectedMarket(m);
+                  setIsMobileMenuOpen(false);
+                }}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex flex-col border-r border-white/5 bg-black/20 relative z-10 w-60">
+        {!['XRAY', 'REMINDER'].includes(activeTab) && (
+          <MarketSelector
+            markets={markets}
+            selectedMarket={selectedMarket}
+            isLoading={isLoadingMarkets}
+            onSelect={(m) => {
+              setSelectedMarket(m);
+            }}
+          />
+        )}
+      </div>
 
       <div className="flex-1 flex flex-col bg-transparent overflow-hidden">
         {/* Main Content Area */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Charts Column */}
-          <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto custom-scrollbar">
-            <div className="flex items-center gap-2 mb-4 bg-[#0C0C0E]/80 p-2 rounded-2xl border border-white/10 w-fit backdrop-blur-sm shadow-2xl">
-              <button
-                onClick={() => setActiveTab('BACKTEST')}
-                className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'BACKTEST' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
-              >
-                <RotateCcw size={14} className={activeTab === 'BACKTEST' ? 'text-black' : ''} />
-                Time Machine
-              </button>
-              <button
-                onClick={() => setActiveTab('REMINDER')}
-                className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'REMINDER' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
-              >
-                <AlertTriangle size={14} className={activeTab === 'REMINDER' ? 'text-black' : ''} />
-                Reminders
-              </button>
-              <button
-                onClick={() => setActiveTab('XRAY')}
-                className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'XRAY' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
-              >
-                <Activity size={14} className={activeTab === 'XRAY' ? 'text-black' : ''} />
-                Analytics
-              </button>
-              <button
-                onClick={() => setActiveTab('SIMULATOR')}
-                className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'SIMULATOR' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
-              >
-                <TrendingUp size={14} className={activeTab === 'SIMULATOR' ? 'text-black' : ''} />
-                PnL Simulator
-              </button>
+          <div className="flex-1 flex flex-col p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto custom-scrollbar">
+            {/* Scrollable Tab Navigation for Mobile */}
+            <div className="w-full overflow-x-auto pb-2 -mb-2 no-scrollbar">
+              <div className="flex items-center gap-2 mb-4 bg-[#0C0C0E]/80 p-2 rounded-2xl border border-white/10 w-fit backdrop-blur-sm shadow-2xl min-w-max">
+                <button
+                  onClick={() => setActiveTab('BACKTEST')}
+                  className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-4 md:px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'BACKTEST' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  <RotateCcw size={14} className={activeTab === 'BACKTEST' ? 'text-black' : ''} />
+                  Time Machine
+                </button>
+                <button
+                  onClick={() => setActiveTab('REMINDER')}
+                  className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-4 md:px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'REMINDER' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  <AlertTriangle size={14} className={activeTab === 'REMINDER' ? 'text-black' : ''} />
+                  Reminders
+                </button>
+                <button
+                  onClick={() => setActiveTab('XRAY')}
+                  className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-4 md:px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'XRAY' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  <Activity size={14} className={activeTab === 'XRAY' ? 'text-black' : ''} />
+                  Analytics
+                </button>
+                <button
+                  onClick={() => setActiveTab('SIMULATOR')}
+                  className={`flex items-center gap-2.5 text-[11px] font-black uppercase tracking-widest px-4 md:px-6 py-3 rounded-xl transition-all duration-300 ${activeTab === 'SIMULATOR' ? 'bg-gradient-to-r from-[#FF6100] to-[#FF8C00] text-black shadow-[0_4px_20px_rgba(255,97,0,0.4)] scale-105' : 'text-zinc-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  <TrendingUp size={14} className={activeTab === 'SIMULATOR' ? 'text-black' : ''} />
+                  PnL Simulator
+                </button>
+              </div>
             </div>
 
             <AnimatePresence mode="wait">
@@ -156,7 +197,7 @@ const App: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="flex-1 flex flex-col overflow-hidden"
+                  className="flex-1 flex flex-col"
                 >
                   <MarketTimeMachine market={selectedMarket} />
                 </motion.div>
@@ -205,7 +246,7 @@ const App: React.FC = () => {
 
           {/* Sidebar - Local Sandboxed Insights */}
           {activeTab === 'BACKTEST' && (
-            <div className="w-80 border-l border-white/5 bg-black/40 flex flex-col p-7 space-y-10 overflow-y-auto custom-scrollbar relative z-10 font-sans">
+            <div className="hidden lg:flex w-80 border-l border-white/5 bg-black/40 flex-col p-7 space-y-10 overflow-y-auto custom-scrollbar relative z-10 font-sans">
               <section className="space-y-6">
                 <div className="flex items-center gap-3 text-zinc-500 uppercase font-black text-[9px] tracking-[0.3em]">
                   <RotateCcw size={14} className="text-[#FF6100]" />

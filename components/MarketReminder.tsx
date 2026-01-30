@@ -193,8 +193,8 @@ export const MarketReminder: React.FC = () => {
         <div className="min-h-screen bg-[#0A0A0F] font-sans">
             {/* Main Container - Full Width */}
             <div className="w-full px-4 py-3">
-                {/* 3-Column Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr_280px] gap-4">
+                {/* 3-Column Layout - Optimized Widths */}
+                <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_220px] gap-4">
 
                     {/* LEFT SIDEBAR - Market Library */}
                     <motion.div
@@ -210,15 +210,14 @@ export const MarketReminder: React.FC = () => {
                                 <span className="text-xs font-semibold text-[#FF8C42] uppercase tracking-wide">Market Library</span>
                             </div>
 
-                            {/* Search Bar */}
-                            <div className="relative mb-5">
-                                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#666666]" />
+                            <div className="relative mb-4">
+                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#666666]" />
                                 <input
                                     type="text"
-                                    placeholder="Search markets..."
+                                    placeholder="Search..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full h-11 bg-white/5 border-[1.5px] border-white/10 rounded-xl pl-11 pr-4 text-sm text-white placeholder:text-[#666666] focus:outline-none focus:border-[#FF8C42] focus:shadow-[0_0_0_4px_rgba(255,140,66,0.1)] transition-all"
+                                    className="w-full h-10 bg-white/5 border-[1.5px] border-white/10 rounded-xl pl-10 pr-3 text-xs text-white placeholder:text-[#666666] focus:outline-none focus:border-[#FF8C42] transition-all"
                                 />
                             </div>
 
@@ -231,14 +230,14 @@ export const MarketReminder: React.FC = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.03 }}
                                         onClick={() => setSelectedMarket(market.marketId)}
-                                        className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 ${selectedMarket === market.marketId
-                                            ? 'bg-[rgba(255,140,66,0.08)] border border-[rgba(255,140,66,0.3)] shadow-[-4px_0_0_0_#FF8C42]'
-                                            : 'bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/[0.12] hover:translate-x-1 hover:shadow-[-4px_0_0_0_#FF8C42]'
+                                        className={`relative p-3 rounded-xl cursor-pointer transition-all duration-300 ${selectedMarket === market.marketId
+                                            ? 'bg-[rgba(255,140,66,0.08)] border border-[rgba(255,140,66,0.3)] shadow-[-3px_0_0_0_#FF8C42]'
+                                            : 'bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] hover:border-white/[0.12] hover:translate-x-1 hover:shadow-[-3px_0_0_0_#FF8C42]'
                                             }`}
                                     >
-                                        <div className="flex gap-3 items-start mb-3">
+                                        <div className="flex gap-2.5 items-start mb-2.5">
                                             {/* Market Image */}
-                                            <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
+                                            <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
                                                 <img
                                                     src={getMarketImage(market.marketId.toString())}
                                                     alt={market.marketTitle}
@@ -248,12 +247,12 @@ export const MarketReminder: React.FC = () => {
 
                                             <div className="flex flex-col flex-1 min-w-0">
                                                 {/* Market ID */}
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[10px] font-mono font-medium text-[#666666]">#{market.marketId}</span>
+                                                <div className="flex items-center gap-2 mb-0.5">
+                                                    <span className="text-[9px] font-mono font-medium text-[#666666]">#{market.marketId}</span>
                                                 </div>
 
                                                 {/* Title */}
-                                                <h4 className="text-[13px] font-medium text-white leading-tight mb-2 line-clamp-2">
+                                                <h4 className="text-[12px] font-medium text-white leading-tight mb-1 line-clamp-2">
                                                     {market.marketTitle}
                                                 </h4>
                                             </div>
@@ -277,7 +276,7 @@ export const MarketReminder: React.FC = () => {
                                                 e.stopPropagation();
                                                 setShowModal(market);
                                             }}
-                                            className="absolute top-4 right-4 w-11 h-7 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.4)] rounded-md text-[#10B981] text-[11px] font-bold hover:bg-[rgba(16,185,129,0.25)] hover:scale-105 transition-all"
+                                            className="absolute top-3 right-3 w-10 h-6 bg-[rgba(16,185,129,0.15)] border border-[rgba(16,185,129,0.4)] rounded text-[#10B981] text-[10px] font-bold hover:bg-[rgba(16,185,129,0.25)] transition-all"
                                         >
                                             YES
                                         </button>
@@ -308,7 +307,7 @@ export const MarketReminder: React.FC = () => {
                                 <input
                                     type="text"
                                     placeholder="Probe markets..."
-                                    className="w-[280px] h-10 bg-white/5 border-[1.5px] border-white/10 rounded-lg pl-10 pr-3 text-sm text-white placeholder:text-[#666666] focus:outline-none focus:border-[#FF8C42] focus:shadow-[0_0_0_4px_rgba(255,140,66,0.1)] transition-all"
+                                    className="w-[200px] h-9 bg-white/5 border-[1.5px] border-white/10 rounded-lg pl-9 pr-3 text-sm text-white placeholder:text-[#666666] focus:outline-none focus:border-[#FF8C42] transition-all"
                                 />
                             </div>
                         </div>
@@ -408,10 +407,10 @@ export const MarketReminder: React.FC = () => {
                                 <div className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_0_3px_rgba(16,185,129,0.2),0_0_12px_rgba(16,185,129,0.6)] animate-pulse" />
                             </div>
 
-                            <div className="p-3 bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] rounded-lg flex items-center justify-between">
-                                <span className="text-base font-bold text-[#10B981] uppercase tracking-wide">Granted</span>
-                                <div className="w-9 h-9 bg-[rgba(16,185,129,0.2)] border-2 border-[rgba(16,185,129,0.4)] rounded-lg flex items-center justify-center">
-                                    <CheckCircle2 size={20} className="text-[#10B981]" />
+                            <div className="p-2.5 bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] rounded-lg flex items-center justify-between">
+                                <span className="text-sm font-bold text-[#10B981] uppercase tracking-wide">Granted</span>
+                                <div className="w-8 h-8 bg-[rgba(16,185,129,0.2)] border-2 border-[rgba(16,185,129,0.4)] rounded-lg flex items-center justify-center">
+                                    <CheckCircle2 size={16} className="text-[#10B981]" />
                                 </div>
                             </div>
                         </div>

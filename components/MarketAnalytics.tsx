@@ -3,34 +3,21 @@
  * Elegant outcome-focused design with category navigation
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    TrendingUp,
-    TrendingDown,
-    Activity,
-    Clock,
-    BarChart2,
-    Zap,
-    Timer,
-    DollarSign,
-    Users,
-    RefreshCw,
     Filter,
     ChevronDown,
-    ExternalLink
+    ExternalLink,
+    Zap
 } from 'lucide-react';
 import {
     fetchTopVolumeMarkets,
-    fetchNewestMarkets,
-    fetchClosingSoonMarkets,
-    fetchPlatformStats,
     fetchLatestPrice,
     OpinionMarket
 } from '../services/opinionApiClient';
 import { getMarketImage } from '../utils/marketImages';
 
-type TabType = 'volume' | 'newest' | 'closing' | 'movers';
 type CategoryType = 'all' | 'macro' | 'pre-tge' | 'crypto' | 'business' | 'politics' | 'sports' | 'tech' | 'culture';
 
 interface MarketWithPrice extends OpinionMarket {
@@ -39,45 +26,21 @@ interface MarketWithPrice extends OpinionMarket {
 }
 
 export const MarketAnalytics: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<TabType>('volume');
     const [activeCategory, setActiveCategory] = useState<CategoryType>('all');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
     // Data states
     const [topVolumeMarkets, setTopVolumeMarkets] = useState<MarketWithPrice[]>([]);
-    const [newestMarkets, setNewestMarkets] = useState<MarketWithPrice[]>([]);
-    const [closingSoonMarkets, setClosingSoonMarkets] = useState<MarketWithPrice[]>([]);
-    const [platformStats, setPlatformStats] = useState({
-        totalMarkets: 0,
-        total24hVolume: 0,
-        avgMarketVolume: 0
-    });
-
-    const bigMovers = useMemo(() => {
-        const allMarkets = [...topVolumeMarkets];
-        return allMarkets
-            .filter(m => m.priceChange24h !== undefined)
-            .sort((a, b) => Math.abs(b.priceChange24h || 0) - Math.abs(a.priceChange24h || 0))
-            .slice(0, 20);
-    }, [topVolumeMarkets]);
 
     const fetchAllData = async () => {
         setIsLoading(true);
         setError(null);
 
         try {
-            const [volumeMarkets, newest, closing, stats] = await Promise.all([
-                fetchTopVolumeMarkets(30),
-                fetchNewestMarkets(30),
-                fetchClosingSoonMarkets(30),
-                fetchPlatformStats()
+            const [volumeMarkets] = await Promise.all([
+                fetchTopVolumeMarkets(30)
             ]);
-
-            console.log('Analytics - Top Volume Market IDs:', volumeMarkets.map(m => m.marketId));
-            console.log('Analytics - Newest Market IDs:', newest.map(m => m.marketId));
-            console.log('Analytics - Closing Soon Market IDs:', closing.map(m => m.marketId));
 
             const marketsWithPrices: any[] = [];
             const batchSize = 5;
@@ -89,13 +52,12 @@ export const MarketAnalytics: React.FC = () => {
                             if (market.yesTokenId) {
                                 const priceData = await fetchLatestPrice(market.yesTokenId);
                                 const currentPrice = parseFloat(priceData.price);
-                                const priceChange24h = (Math.random() - 0.5) * 20;
-                                return { ...market, currentPrice, priceChange24h };
+                                return { ...market, currentPrice };
                             }
                         } catch (err) {
                             console.warn(`Failed to fetch price for ${market.yesTokenId}:`, err);
                         }
-                        return { ...market, currentPrice: 0.5, priceChange24h: 0 };
+                        return { ...market, currentPrice: 0.5 };
                     })
                 );
                 marketsWithPrices.push(...batchResults);
@@ -105,10 +67,6 @@ export const MarketAnalytics: React.FC = () => {
             }
 
             setTopVolumeMarkets(marketsWithPrices);
-            setNewestMarkets(newest.map(m => ({ ...m, currentPrice: 0.5 })));
-            setClosingSoonMarkets(closing.map(m => ({ ...m, currentPrice: 0.5 })));
-            setPlatformStats(stats);
-            setLastUpdated(new Date());
         } catch (err) {
             console.error('Failed to fetch market analytics:', err);
             setError('Failed to load market data. Please try again.');
@@ -147,27 +105,8 @@ export const MarketAnalytics: React.FC = () => {
         { id: 'culture' as CategoryType, label: 'Culture' },
     ];
 
-    const getCategoryColor = (category: string) => {
-        const colors: Record<string, { bg: string; text: string }> = {
-            crypto: { bg: '#4C1D95', text: '#C084FC' },
-            politics: { bg: '#831843', text: '#F472B6' },
-            sports: { bg: '#7F1D1D', text: '#FCA5A5' },
-            business: { bg: '#134E4A', text: '#5EEAD4' },
-            macro: { bg: '#1E3A8A', text: '#93C5FD' },
-            tech: { bg: '#4C1D95', text: '#A78BFA' },
-            culture: { bg: '#713F12', text: '#FCD34D' },
-        };
-        return colors[category.toLowerCase()] || { bg: '#2A2A2F', text: '#AAAAAA' };
-    };
-
     const getActiveMarkets = (): MarketWithPrice[] => {
-        switch (activeTab) {
-            case 'volume': return topVolumeMarkets;
-            case 'newest': return newestMarkets;
-            case 'closing': return closingSoonMarkets;
-            case 'movers': return bigMovers;
-            default: return topVolumeMarkets;
-        }
+        return topVolumeMarkets;
     };
 
     const openMarketPage = (marketId: number) => {
@@ -176,35 +115,40 @@ export const MarketAnalytics: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#0A0A0F]" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
-            {/* Hero Section */}
-            <div className="max-w-[1600px] mx-auto px-10 pt-20 pb-16">
-                <div className="text-center mb-16">
-                    <h1 className="text-7xl font-light tracking-wide mb-4" style={{
-                        fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                        color: '#E8E8E8',
-                        letterSpacing: '2px'
+            {/* Hero Section - Institutional Style */}
+            <div className="max-w-[1600px] mx-auto px-8 pt-16 pb-12">
+                <div className="text-center mb-16 relative">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#FF6100]/5 blur-[120px] rounded-full -z-10"
+                    />
+                    <h1 className="text-6xl font-light tracking-tight mb-4" style={{
+                        fontFamily: "'Outfit', 'Inter', sans-serif",
+                        color: '#FFFFFF',
+                        letterSpacing: '-1px'
                     }}>
-                        Market Intelligence
+                        Market <span className="font-black italic text-[#FF6100]">Intelligence</span>
                     </h1>
-                    <h2 className="text-3xl font-semibold mb-3" style={{ letterSpacing: '0.5px' }}>
-                        <span className="text-[#FF8C42]">Real-Time Prediction Analytics</span>
-                    </h2>
-                    <p className="text-base text-[#888888]" style={{ letterSpacing: '0.3px' }}>
-                        Trade on the outcomes of real-world events
-                    </p>
+                    <div className="flex items-center justify-center gap-3 mb-6">
+                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#FF6100]/40" />
+                        <h2 className="text-sm font-black uppercase tracking-[0.3em] text-zinc-500">
+                            Real-Time Institutional Terminal
+                        </h2>
+                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#FF6100]/40" />
+                    </div>
                 </div>
 
-                {/* Category Navigation */}
-                <div className="flex items-center justify-between py-6 mb-10 border-b border-white/5">
-                    {/* Category Pills */}
-                    <div className="flex flex-wrap gap-3">
+                {/* Enhanced Navigation Bar */}
+                <div className="flex items-center justify-between py-4 mb-10 border-b border-white/[0.06] backdrop-blur-md sticky top-0 z-30">
+                    <div className="flex flex-wrap gap-2">
                         {categories.map(cat => (
                             <button
                                 key={cat.id}
                                 onClick={() => setActiveCategory(cat.id)}
-                                className={`h-10 px-5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === cat.id
-                                    ? 'bg-gradient-to-r from-[#FF8C42] to-[#F97316] text-white shadow-[0_4px_12px_rgba(249,115,22,0.4)] border-none'
-                                    : 'bg-white/5 text-[#AAAAAA] border border-white/10 hover:bg-white/8 hover:text-white hover:border-white/20 hover:-translate-y-px'
+                                className={`h-9 px-4 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${activeCategory === cat.id
+                                    ? 'bg-[#FF6100] text-white shadow-[0_4px_12px_rgba(255,97,0,0.3)]'
+                                    : 'bg-white/5 text-zinc-500 border border-white/5 hover:bg-white/10 hover:text-white hover:border-white/10'
                                     }`}
                             >
                                 {cat.label}
@@ -251,7 +195,6 @@ export const MarketAnalytics: React.FC = () => {
                             style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}
                         >
                             {getActiveMarkets().slice(0, 12).map((market, index) => {
-                                const categoryColor = getCategoryColor('crypto');
                                 const yesPrice = (market.currentPrice || 0.5) * 100;
                                 const noPrice = 100 - yesPrice;
 
@@ -262,119 +205,95 @@ export const MarketAnalytics: React.FC = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05, duration: 0.4 }}
                                         onClick={() => openMarketPage(market.marketId)}
-                                        className="bg-[#1A1A1F] rounded-2xl p-7 border border-white/[0.06] min-h-[420px] flex flex-col cursor-pointer hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:border-white/10 transition-all duration-300"
-                                        style={{ boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)' }}
+                                        className="bg-[rgba(20,20,25,0.7)] rounded-2xl p-6 border border-white/[0.06] flex flex-col cursor-pointer hover:-translate-y-1 hover:border-[#FF6100]/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-400 group relative overflow-hidden"
                                     >
+                                        {/* Premium Subtle Pattern */}
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#FF6100]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#FF6100]/5 blur-2xl rounded-full" />
+
                                         {/* Card Header */}
-                                        <div className="flex gap-4 mb-6">
-                                            {/* Icon/Image */}
-                                            <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#2A2A2F] border border-white/10 flex items-center justify-center flex-shrink-0">
+                                        <div className="flex gap-4 mb-5 relative z-10">
+                                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex-shrink-0">
                                                 <img
                                                     src={getMarketImage(market.marketId.toString())}
                                                     alt={market.marketTitle}
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                 />
                                             </div>
 
-                                            {/* Title & Category */}
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-lg font-semibold text-white leading-snug mb-2 line-clamp-2">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-[9px] font-black text-[#FF6100] px-1.5 py-0.5 bg-[#FF6100]/10 border border-[#FF6100]/20 rounded uppercase tracking-tighter">
+                                                        #{market.marketId}
+                                                    </span>
+                                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Active Market</span>
+                                                </div>
+                                                <h3 className="text-[15px] font-bold text-white leading-tight line-clamp-2 italic">
                                                     {market.marketTitle}
                                                 </h3>
-                                                <span
-                                                    className="inline-block px-3 py-1 rounded-xl text-xs font-semibold uppercase tracking-wide"
-                                                    style={{
-                                                        backgroundColor: categoryColor.bg,
-                                                        color: categoryColor.text,
-                                                        letterSpacing: '0.5px'
-                                                    }}
-                                                >
-                                                    Crypto
-                                                </span>
                                             </div>
                                         </div>
 
-                                        {/* Outcomes Section */}
-                                        <div className="flex flex-col gap-4 mb-5 flex-1">
-                                            {/* YES Outcome */}
-                                            <div className="relative grid grid-cols-[1fr_auto_auto_auto] items-center gap-3 p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-white/[0.08] transition-all">
-                                                {/* Progress Bar Background */}
+                                        {/* Outcomes Section - Institutional Design */}
+                                        <div className="space-y-3 mb-5 relative z-10">
+                                            {/* YES Bar */}
+                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-10 flex items-center justify-between px-4 transition-all hover:border-emerald-500/30">
                                                 <div
-                                                    className="absolute top-0 left-0 h-full rounded-xl transition-all duration-500"
-                                                    style={{
-                                                        width: `${yesPrice}%`,
-                                                        background: 'linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%)',
-                                                        zIndex: 0
-                                                    }}
-                                                ></div>
-
-                                                {/* Content (above progress bar) */}
-                                                <span className="text-[15px] font-medium text-[#E8E8E8] truncate relative z-10">YES</span>
-                                                <span className="text-[15px] font-semibold text-white min-w-[45px] text-right relative z-10">{yesPrice.toFixed(0)}%</span>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); }}
-                                                    className="w-[52px] h-8 bg-[#10B981]/15 border border-[#10B981]/40 rounded-md text-[#10B981] text-[13px] font-semibold hover:bg-[#10B981]/25 hover:border-[#10B981]/60 hover:scale-105 transition-all relative z-10"
-                                                >
-                                                    YES
-                                                </button>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); }}
-                                                    className="w-[52px] h-8 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded-md text-[#EF4444] text-[13px] font-semibold hover:bg-[#EF4444]/25 hover:border-[#EF4444]/60 hover:scale-105 transition-all relative z-10"
-                                                >
-                                                    NO
-                                                </button>
+                                                    className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-emerald-500/10 to-transparent transition-all duration-1000"
+                                                    style={{ width: `${yesPrice}%` }}
+                                                />
+                                                <div className="flex items-center gap-2 relative z-10">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                                                    <span className="text-[10px] font-black text-white tracking-[0.2em]">YES</span>
+                                                </div>
+                                                <div className="flex items-center gap-3 relative z-10">
+                                                    <span className="text-xs font-bold text-emerald-400 font-mono italic">{yesPrice.toFixed(1)}%</span>
+                                                    <div className="h-6 w-px bg-white/10" />
+                                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Bid</span>
+                                                </div>
                                             </div>
 
-                                            {/* NO Outcome */}
-                                            <div className="relative grid grid-cols-[1fr_auto_auto_auto] items-center gap-3 p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-white/[0.08] transition-all">
-                                                {/* Progress Bar Background */}
+                                            {/* NO Bar */}
+                                            <div className="relative group/bar overflow-hidden rounded-lg bg-black/40 border border-white/5 h-10 flex items-center justify-between px-4 transition-all hover:border-rose-500/30">
                                                 <div
-                                                    className="absolute top-0 left-0 h-full rounded-xl transition-all duration-500"
-                                                    style={{
-                                                        width: `${noPrice}%`,
-                                                        background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%)',
-                                                        zIndex: 0
-                                                    }}
-                                                ></div>
-
-                                                {/* Content */}
-                                                <span className="text-[15px] font-medium text-[#E8E8E8] truncate relative z-10">NO</span>
-                                                <span className="text-[15px] font-semibold text-white min-w-[45px] text-right relative z-10">{noPrice.toFixed(0)}%</span>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); }}
-                                                    className="w-[52px] h-8 bg-[#10B981]/15 border border-[#10B981]/40 rounded-md text-[#10B981] text-[13px] font-semibold hover:bg-[#10B981]/25 hover:border-[#10B981]/60 hover:scale-105 transition-all relative z-10"
-                                                >
-                                                    YES
-                                                </button>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); }}
-                                                    className="w-[52px] h-8 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded-md text-[#EF4444] text-[13px] font-semibold hover:bg-[#EF4444]/25 hover:border-[#EF4444]/60 hover:scale-105 transition-all relative z-10"
-                                                >
-                                                    NO
-                                                </button>
+                                                    className="absolute inset-0 bg-gradient-to-r from-rose-500/20 via-rose-500/10 to-transparent transition-all duration-1000"
+                                                    style={{ width: `${noPrice}%` }}
+                                                />
+                                                <div className="flex items-center gap-2 relative z-10">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                                                    <span className="text-[10px] font-black text-white tracking-[0.2em]">NO</span>
+                                                </div>
+                                                <div className="flex items-center gap-3 relative z-10">
+                                                    <span className="text-xs font-bold text-rose-400 font-mono italic">{noPrice.toFixed(1)}%</span>
+                                                    <div className="h-6 w-px bg-white/10" />
+                                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Ask</span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Show all outcomes link */}
-                                        <div className="text-center mb-5">
-                                            <button className="text-[13px] text-[#FF8C42] font-medium hover:text-[#FF9D5C] hover:underline inline-flex items-center gap-1">
-                                                Show all outcomes
-                                                <ExternalLink size={12} />
-                                            </button>
+                                        {/* Metrics Grid */}
+                                        <div className="grid grid-cols-2 gap-2 mb-5 relative z-10">
+                                            <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
+                                                <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">VOL_24H</span>
+                                                <span className="text-xs font-bold text-zinc-200">{formatVolume(market.volume24h || '0')}</span>
+                                            </div>
+                                            <div className="p-3 bg-white/[0.02] border border-white/[0.05] rounded-xl flex items-center justify-between">
+                                                <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">CL_SOON</span>
+                                                <div className="flex items-center gap-1.5">
+                                                    <Zap size={10} className="text-[#FFB84D]" />
+                                                    <span className="text-xs font-bold text-[#FFB84D]">{formatDate(market.createdAt)}</span>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {/* Card Footer */}
-                                        <div className="flex items-center justify-between pt-5 border-t border-white/[0.06] mt-auto">
-                                            {/* Volume */}
-                                            <div className="flex items-center gap-2 text-sm text-[#888888]">
-                                                <BarChart2 size={16} />
-                                                <span className="font-semibold text-[#AAAAAA]">{formatVolume(market.volume24h || '0')}</span>
+                                        <div className="flex items-center justify-between pt-4 border-t border-white/[0.05] mt-auto relative z-10">
+                                            <div className="flex items-center gap-2 px-3 py-1 bg-[#FF6100]/5 border border-[#FF6100]/20 rounded-lg group-hover:bg-[#FF6100]/10 transition-colors">
+                                                <span className="text-[9px] font-black text-[#FF6100] uppercase tracking-widest">Open Analytics</span>
+                                                <ExternalLink size={10} className="text-[#FF6100]" />
                                             </div>
-
-                                            {/* Date */}
-                                            <div className="flex items-center gap-2 text-sm text-[#888888]">
-                                                <Clock size={16} />
-                                                <span className="font-medium text-[#AAAAAA]">{formatDate(market.createdAt)}</span>
+                                            <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">
+                                                Institutional Feed
                                             </div>
                                         </div>
                                     </motion.div>

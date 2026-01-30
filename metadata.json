@@ -1,0 +1,5 @@
+{
+  "name": "Opinion Backtester & Replay Engine",
+  "description": "A high-fidelity backtesting and candle-by-candle replay tool for prediction markets, featuring strategy simulation and AI-driven performance analysis.",
+  "requestFramePermissions": []
+}

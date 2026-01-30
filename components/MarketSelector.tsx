@@ -14,7 +14,7 @@ interface Props {
 
 export const MarketSelector: React.FC<Props> = ({ markets, selectedMarket, isLoading, onSelect }) => {
   return (
-    <div className="w-80 border-r border-white/5 bg-black/20 p-5 flex flex-col gap-8 shrink-0 relative z-10 font-sans">
+    <div className="w-72 border-r border-white/5 bg-black/20 p-4 flex flex-col gap-8 shrink-0 relative z-10 font-sans">
       <div className="space-y-6">
         {/* Precision Search */}
         <div className="relative group">
@@ -69,7 +69,7 @@ export const MarketSelector: React.FC<Props> = ({ markets, selectedMarket, isLoa
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.03, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => onSelect(m)}
-                className={`w-full text-left p-4 rounded-xl transition-all relative overflow-hidden group border ${selectedMarket.id === m.id
+                className={`w-full text-left p-3.5 rounded-xl transition-all relative overflow-hidden group border ${selectedMarket.id === m.id
                   ? 'bg-[#FF6100]/10 border-[#FF6100]/40 shadow-[0_0_20px_rgba(255,97,0,0.1)]'
                   : 'cyber-card border-white/5 hover:border-white/10'
                   }`}
@@ -80,7 +80,7 @@ export const MarketSelector: React.FC<Props> = ({ markets, selectedMarket, isLoa
 
                 <div className="flex gap-3 items-start mb-3">
                   {/* Market Image */}
-                  <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-white/5 border border-white/10">
                     <img
                       src={m.imageUrl || getMarketImage(m.topicId)}
                       alt={m.name}

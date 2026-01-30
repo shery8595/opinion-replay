@@ -1,7 +1,11 @@
 import { HelpCircle, Activity, Wifi, WifiOff } from 'lucide-react';
+import { useState } from 'react';
 import { isAPIKeyConfigured } from '../services/opinionApiClient';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [logoError, setLogoError] = useState(false);
+
+
   return (
     <div className="flex flex-col h-screen bg-[#060608] text-[#F8F8F8] overflow-hidden font-sans">
       {/* Top Navigation - Floating Glass Header */}
@@ -11,13 +15,23 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div className="absolute top-0 right-0 w-64 h-full bg-gradient-to-l from-orange-500/5 to-transparent pointer-events-none" />
 
           <div className="flex items-center gap-10">
-            {/* Branding Section */}
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#FF6100] flex items-center justify-center rounded-lg shadow-[0_0_20px_rgba(255,97,0,0.4)] relative">
-                <Activity size={18} className="text-black font-bold" />
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-black rounded-full flex items-center justify-center border border-white/10">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
-                </div>
+              <div className="w-8 h-8 bg-[#FF6100] flex items-center justify-center rounded-lg shadow-[0_0_20px_rgba(255,97,0,0.4)] relative overflow-hidden">
+                {!logoError ? (
+                  <img
+                    src="/logo/logo.png"
+                    alt="Logo"
+                    className="w-full h-full object-cover"
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <>
+                    <Activity size={18} className="text-black font-bold" />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-black rounded-full flex items-center justify-center border border-white/10">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                    </div>
+                  </>
+                )}
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-black tracking-widest uppercase leading-none shimer-text">
